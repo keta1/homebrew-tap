@@ -5,7 +5,7 @@ cask "cc-switch" do
   url "https://github.com/farion1231/cc-switch/releases/download/v#{version}/CC-Switch-v#{version}-macOS.dmg",
       verified: "github.com/farion1231/cc-switch/"
   name "CC Switch"
-  desc "Cross-platform desktop All-in-One assistant tool for Claude Code, Codex, OpenCode, openclaw & Gemini CLI"
+  desc "Desktop assistant for Claude Code, Codex, OpenCode, and Gemini CLI"
   homepage "https://github.com/farion1231/cc-switch"
 
   livecheck do
