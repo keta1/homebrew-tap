@@ -1,6 +1,6 @@
 cask "64gram" do
-  version "1.2.1"
-  sha256 "5bc6df26c617bdefe135616a23ae869ca44ce774b6ce65e7a570c02f0a49df2d"
+  version "1.2.8"
+  sha256 "4fe036a5820295b411305edd3b4d9b92c92d80dbc3da5a57471aac4b2ed0f74f"
 
   url "https://github.com/TDesktop-x64/tdesktop/releases/download/v#{version}/64Gram_#{version}_mac.dmg"
   name "64Gram"
