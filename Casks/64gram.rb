@@ -13,12 +13,13 @@ cask "64gram" do
   end
 
   auto_updates true
+  depends_on :macos
 
   app "Telegram.app"
 
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/Telegram.app"]
+  postflight_steps do
+    run "/usr/bin/xattr",
+        args: ["-dr", "com.apple.quarantine", "{{appdir}}/Telegram.app"]
   end
 
   uninstall quit: "com.tdesktop.Telegram"
