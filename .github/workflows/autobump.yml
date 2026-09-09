@@ -1,0 +1,55 @@
+name: Bump packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Check for updates without creating pull requests
+        type: boolean
+        default: false
+  schedule:
+    - cron: "23 1 * * *" # Daily at 09:23 Asia/Singapore.
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bump-packages
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    if: github.repository == 'keta1/homebrew-tap' && github.ref == 'refs/heads/main'
+    runs-on: macos-26
+    timeout-minutes: 30
+    env:
+      HOMEBREW_DEVELOPER: "1"
+
+    steps:
+      - name: Check token configuration
+        env:
+          HOMEBREW_BUMP_TOKEN: ${{ secrets.HOMEBREW_BUMP_TOKEN }}
+        run: |
+          if [[ -z "$HOMEBREW_BUMP_TOKEN" ]]; then
+            echo "::error::Set the HOMEBREW_BUMP_TOKEN repository secret before running this workflow."
+            exit 1
+          fi
+
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@c722b5d961eb7f3ebec81ec2e5584faf7c3cff5d # main
+        with:
+          token: ${{ secrets.HOMEBREW_BUMP_TOKEN }}
+          brew-gh-api-token: ${{ secrets.HOMEBREW_BUMP_TOKEN }}
+
+      - name: Configure Git
+        uses: Homebrew/actions/git-user-config@c722b5d961eb7f3ebec81ec2e5584faf7c3cff5d # main
+
+      - name: Check for updates and open PRs
+        env:
+          DRY_RUN: ${{ inputs.dry_run || false }}
+        run: |
+          args=(--tap=keta1/tap --no-fork)
+          if [[ "$DRY_RUN" != 'true' ]]; then
+            args+=(--open-pr)
+          fi
+          brew bump "${args[@]}"
